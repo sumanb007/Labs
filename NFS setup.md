@@ -2,7 +2,7 @@
 
 This guide ensures proper NFS sharing between:
 
-- NFS Server: 192.168.1.110 (hosting /mnt/sdb2-partition/mongo-NFS-server)
+- NFS Server: 192.168.1.110 (hosting /mnt/sdc/mongo-NFS-server)
 - Clients:
   - Docker Host (masternode.k8s.com: 192.168.1.11)
   - Kubernetes Worker Nodes (workernode1, workernode2 / 192.168.1.12, 192.168.1.13)
