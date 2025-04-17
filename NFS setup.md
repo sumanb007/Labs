@@ -74,6 +74,47 @@ sudo mount -t nfs 192.168.1.110:/mnt/sdc/mongo-NFS-server /mnt/test-nfs
 
 ## * Optional - Configure Docker to Use NFS
 
+### 1. Create volume 
+```bash
+docker volume create \
+  --driver local \
+  --opt type=nfs \
+  --opt o=addr=192.168.1.110,rw,soft,timeo=30 \
+  --opt device=:/mnt/sdb2-partition/mongo-NFS-server/docker \
+  mongodb_data
+```
+
+### 2. Verify the Volume
+```bash
+docker volume inspect mongodb_data
+```
+Expected Output:
+```json
+{
+  "Driver": "local",
+  "Options": {
+    "device": ":/mnt/sdb2-partition/mongo-NFS-server/docker",
+    "o": "addr=192.168.1.110,rw,soft,timeo=30",
+    "type": "nfs"
+  },
+  ...
+}
+```
+### 3. Run a Container with the NFS Volume
+```bash
+docker run -d \
+  --name web-mongodb \
+  -v mongodb_data:/data/db \
+  mongo:latest
+```
+
+### 4. on the NFS server (192.168.1.110):
+```bash
+ls /mnt/sdb2-partition/mongo-NFS-server/docker
+```
+
+## Alternately
+
 ### 1. Update docker-compose.yml
 ```yaml
 volumes:
