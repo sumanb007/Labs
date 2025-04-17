@@ -61,7 +61,7 @@ sudo apt update && sudo apt install nfs-common -y
 ### 2. Test Manual Mount (Optional)
 ```bash
 sudo mkdir -p /mnt/test-nfs
-sudo mount -t nfs 192.168.1.110:/mnt/sdb2-partition/mongo-NFS-server /mnt/test-nfs
+sudo mount -t nfs 192.168.1.110:/mnt/sdc/mongo-NFS-server /mnt/test-nfs
 ```
 
 - verify
