@@ -49,11 +49,11 @@ sudo ufw enable
 
 <img src="https://raw.githubusercontent.com/sumanb007/Labs/main/img/nfsServer.png" alt="nfsServer" width="700"/>
 
-## Step 2 : Configure NFS Clients (Docker & Kubernetes Nodes)
+## Step 2 : Configure NFS Clients 
 
 ### 1. Install nfs-common on All Clients
 
-Run on all worker nodes (workernode1, workernode2) and Docker host (masternode):
+Run on all client masternode:
 ```bash
 sudo apt update && sudo apt install nfs-common -y
 ```
@@ -72,4 +72,49 @@ sudo mount -t nfs 192.168.1.110:/mnt/sdc/mongo-NFS-server /mnt/test-nfs
 
 <img src="https://raw.githubusercontent.com/sumanb007/Labs/main/img/nfsClient.png" alt="nfsClient" width="700"/>
 
+## * Optional - Configure Docker to Use NFS
+
+### 1. Update docker-compose.yml
+```yaml
+volumes:
+  mongodb_data:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: addr=192.168.1.110,rw,soft,timeo=30
+      device: ":/mnt/sdb2-partition/mongo-NFS-server/docker"  # Separate subdir
+```
+
+### 2. Restart Docker Containers
+```bash
+docker compose down && docker compose up -d
+```
+
+### 3. Check Docker Container
+```bash
+docker exec -it web-mongodb ls /data/db
+```
+
+## * Optional - Configure Kubernetes to Use NFS
+
+### 1. Update mongodb manifest (mongodb-pod.yaml)
+```yaml
+volumes:
+  - name: mongo-storage
+    nfs:
+      server: 192.168.1.110
+      path: /mnt/sdb2-partition/mongo-NFS-server/kubernetes  # Separate subdir
+```
+
+### 2. Apply Changes
+```yaml
+kubectl delete -f mongodb-pod.yaml --force
+kubectl apply -f mongodb-pod.yaml
+```
+
+### 3. Check Pod
+```bash
+kubectl get pods -o wide
+kubectl logs web-mongodb-<pod-id>
+```
 
