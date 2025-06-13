@@ -73,6 +73,7 @@ sudo mount -t nfs 192.168.1.110:/mnt/sdc/mongo-NFS-server /mnt/test-nfs
 <img src="https://raw.githubusercontent.com/sumanb007/Labs/main/img/nfsClient.png" alt="nfsClient" width="700"/>
 
 ## * Optional - Configure Docker to Use NFS
+First ensures that nfs is installed on the host before we run container.
 
 ### 1. Create volume 
 ```bash
@@ -137,6 +138,7 @@ docker exec -it web-mongodb ls /data/db
 ```
 
 ## * Optional - Configure Kubernetes to Use NFS
+First ensures that nfs is installed on all the cluster host before we run pods.
 
 ### 1. Update mongodb manifest (mongodb-pod.yaml)
 ```yaml
